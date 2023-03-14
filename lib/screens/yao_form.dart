@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:guest_book/service/firebase_service.dart';
 
 class YaoForm extends StatefulWidget {
   const YaoForm({super.key});
@@ -12,6 +14,7 @@ class YaoForm extends StatefulWidget {
 
 class _YaoFormState extends State<YaoForm> {
   double? _deviceHeight, _deviceWidth;
+
   final GlobalKey<FormState> _dataKey = GlobalKey<FormState>();
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _asalController = TextEditingController();
@@ -22,6 +25,14 @@ class _YaoFormState extends State<YaoForm> {
   final TextEditingController _ketController = TextEditingController();
 
   File? _docImage;
+
+  FirebaseService? _firebaseService;
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseService = GetIt.instance.get<FirebaseService>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,10 +127,63 @@ class _YaoFormState extends State<YaoForm> {
   }
 
   // Fungsi Simpan Data Ke DB
-  void _saveData() {
+  void _saveData() async {
     if (_dataKey.currentState!.validate() && _docImage != null) {
       _dataKey.currentState!.save();
-      print("Valid!");
+      try {
+        bool result = await _firebaseService!.upDatabase(
+            nama: _namaController.text,
+            asal: _asalController.text,
+            keperluan: _keperluanController.text,
+            phoneNum: _phoneNumController.text,
+            diTemui: _ditemuiController.text,
+            jumTamu: _jumlahTamuController.text,
+            ket: _ketController.text,
+            imgDoc: _docImage!);
+        if (result) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Sukses'),
+              content: const Text('Terima kasih atas Kunjungannya'),
+              actions: [
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Error'),
+              content: const Text('Failed to save data to Firebase.'),
+              actions: [
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+          );
+        }
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text('An error occurred: $e'),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 

@@ -35,6 +35,11 @@ dependencies:
     sdk: flutter
   http: ^0.13.5
   image_picker: ^0.8.7
+  firebase_core: ^2.7.1
+  firebase_analytics: ^10.1.5
+  cloud_firestore: ^4.4.4
+  firebase_storage: ^11.0.15
+  get_it: ^7.2.0
   intl: ^0.18.0
 
 dev_dependencies:

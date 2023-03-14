@@ -1,7 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:guest_book/screens/yao_form.dart';
+import 'package:get_it/get_it.dart';
+import 'package:guest_book/screens/yao_splash.dart';
+import 'package:guest_book/service/firebase_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  GetIt.instance.registerSingleton<FirebaseService>(FirebaseService());
   runApp(const MyApp());
 }
 
@@ -18,8 +25,9 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         primarySwatch: Colors.amber,
       ),
-      initialRoute: 'input',
+      initialRoute: 'splash',
       routes: {
+        'splash': (context) => const YaoSplash(),
         'input': (context) => const YaoForm(),
       },
     );
