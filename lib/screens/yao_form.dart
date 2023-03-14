@@ -13,13 +13,13 @@ class YaoForm extends StatefulWidget {
 class _YaoFormState extends State<YaoForm> {
   double? _deviceHeight, _deviceWidth;
   final GlobalKey<FormState> _dataKey = GlobalKey<FormState>();
-  TextEditingController _namaController = TextEditingController();
-  TextEditingController _asalController = TextEditingController();
-  TextEditingController _keperluanController = TextEditingController();
-  TextEditingController _phoneNumController = TextEditingController();
-  TextEditingController _ditemuiController = TextEditingController();
-  TextEditingController _jumlahTamuController = TextEditingController();
-  TextEditingController _ketController = TextEditingController();
+  final TextEditingController _namaController = TextEditingController();
+  final TextEditingController _asalController = TextEditingController();
+  final TextEditingController _keperluanController = TextEditingController();
+  final TextEditingController _phoneNumController = TextEditingController();
+  final TextEditingController _ditemuiController = TextEditingController();
+  final TextEditingController _jumlahTamuController = TextEditingController();
+  final TextEditingController _ketController = TextEditingController();
 
   File? _docImage;
 
