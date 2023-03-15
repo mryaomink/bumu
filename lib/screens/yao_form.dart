@@ -72,8 +72,8 @@ class _YaoFormState extends State<YaoForm> {
 
   Widget _optionalText() {
     return const Text(
-      'Optional',
-      style: TextStyle(fontSize: 18.0, color: Colors.red),
+      '* Jika ada Dokumen yang diperlukan upload disini(optional)',
+      style: TextStyle(fontSize: 15.0, color: Colors.red),
     );
   }
 
@@ -99,13 +99,16 @@ class _YaoFormState extends State<YaoForm> {
             ),
             _optionalText(),
             const SizedBox(
-              height: 14,
+              height: 20,
             ),
-            _addFoto(),
+            // _addFoto(),
+            const SizedBox(
+              height: 30,
+            ),
+            _simpanData(),
             const SizedBox(
               height: 20,
             ),
-            _simpanData(),
           ],
         ),
       ),
@@ -129,18 +132,26 @@ class _YaoFormState extends State<YaoForm> {
   // Fungsi Simpan Data Ke DB
   void _saveData() async {
     if (_dataKey.currentState!.validate() && _docImage != null) {
-      _dataKey.currentState!.save();
+      _dataKey.currentState!.reset();
+
       try {
         bool result = await _firebaseService!.upDatabase(
-            nama: _namaController.text,
-            asal: _asalController.text,
-            keperluan: _keperluanController.text,
-            phoneNum: _phoneNumController.text,
-            diTemui: _ditemuiController.text,
-            jumTamu: _jumlahTamuController.text,
-            ket: _ketController.text,
-            imgDoc: _docImage!);
+          nama: _namaController.text,
+          asal: _asalController.text,
+          keperluan: _keperluanController.text,
+          phoneNum: _phoneNumController.text,
+          diTemui: _ditemuiController.text,
+          jumTamu: _jumlahTamuController.text,
+          ket: _ketController.text,
+        );
         if (result) {
+          _namaController.clear();
+          _asalController.clear();
+          _keperluanController.clear();
+          _phoneNumController.clear();
+          _ditemuiController.clear();
+          _jumlahTamuController.clear();
+          _ketController.clear();
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -148,9 +159,9 @@ class _YaoFormState extends State<YaoForm> {
               content: const Text('Terima kasih atas Kunjungannya'),
               actions: [
                 TextButton(
-                  child: const Text('OK'),
-                  onPressed: () => Navigator.pop(context),
-                ),
+                    child: const Text('OK'),
+                    onPressed: () =>
+                        Navigator.pushReplacementNamed(context, 'splash')),
               ],
             ),
           );
@@ -263,6 +274,7 @@ class _YaoFormState extends State<YaoForm> {
 
   Widget _phoneTextField() {
     return TextFormField(
+      keyboardType: TextInputType.phone,
       controller: _phoneNumController,
       decoration: const InputDecoration(
         hintText: "Nomor Telp.",
@@ -295,6 +307,7 @@ class _YaoFormState extends State<YaoForm> {
 
   Widget _jumlahTamuTextField() {
     return TextFormField(
+      keyboardType: TextInputType.number,
       controller: _jumlahTamuController,
       decoration: const InputDecoration(
         hintText: "Jumlah Tamu",
@@ -312,7 +325,7 @@ class _YaoFormState extends State<YaoForm> {
   Widget _ketTextField() {
     return TextFormField(
       controller: _ketController,
-      maxLines: 3,
+      maxLines: 2,
       decoration: const InputDecoration(
         hintText: "Keterangan",
       ),

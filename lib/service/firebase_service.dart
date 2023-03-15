@@ -18,23 +18,24 @@ class FirebaseService {
     required String diTemui,
     required String jumTamu,
     required String ket,
-    required File imgDoc,
+    File? imgDoc,
   }) async {
     try {
       String fileName = Timestamp.now().millisecondsSinceEpoch.toString() +
-          p.extension(imgDoc.path);
+          p.extension(imgDoc!.path);
       UploadTask task = _strorage.ref('dokument/$fileName').putFile(imgDoc);
       return task.then((snapshot) async {
-        String downloadUrl = await snapshot.ref.getDownloadURL();
-        await _db.collection("dataTamu").doc().set({
+        // String downloadUrl = await snapshot.ref.getDownloadURL();
+        await _db.collection("datatamu").doc().set({
           "nama": nama,
           "instansi": asal,
           "keperluan": keperluan,
-          "no.telp": phoneNum,
-          "diTemui": diTemui,
-          "jumlah Tamu": jumTamu,
+          "notelp": phoneNum,
+          "ditemui": diTemui,
+          "jumlahtamu": jumTamu,
           "keterangan": ket,
-          "dokument": downloadUrl,
+          // "dokumen": downloadUrl,
+          'timestamp': FieldValue.serverTimestamp(),
         });
         return true;
       });
