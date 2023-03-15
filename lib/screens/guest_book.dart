@@ -13,8 +13,13 @@ class GuestBook extends StatefulWidget {
 
 class _GuestBookState extends State<GuestBook> {
   html.File? file;
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _namaController = TextEditingController();
+  final TextEditingController _asalController = TextEditingController();
+  final TextEditingController _keperluanController = TextEditingController();
+  final TextEditingController _nomorController = TextEditingController();
+  final TextEditingController _ditemuiController = TextEditingController();
+  final TextEditingController _jumTamuController = TextEditingController();
+  final TextEditingController _ketController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,15 +58,50 @@ class _GuestBookState extends State<GuestBook> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: TextFormField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(labelText: 'Title'),
+                  controller: _namaController,
+                  decoration: const InputDecoration(labelText: 'Nama'),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: TextFormField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(labelText: 'Description'),
+                  controller: _asalController,
+                  decoration: const InputDecoration(labelText: 'Asal Instansi'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextFormField(
+                  controller: _keperluanController,
+                  decoration: const InputDecoration(labelText: 'Keperluan'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextFormField(
+                  controller: _nomorController,
+                  decoration: const InputDecoration(labelText: 'No.Telp'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextFormField(
+                  controller: _ditemuiController,
+                  decoration: const InputDecoration(labelText: 'yang ditemui'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextFormField(
+                  controller: _jumTamuController,
+                  decoration: const InputDecoration(labelText: 'Jumlah Tamu'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextFormField(
+                  controller: _ketController,
+                  decoration: const InputDecoration(labelText: 'Keterangan'),
                 ),
               ),
               const SizedBox(height: 20),
@@ -78,8 +118,13 @@ class _GuestBookState extends State<GuestBook> {
                   final imageUrl = await snapshot.ref.getDownloadURL();
 
                   final formData = {
-                    'title': _titleController.text,
-                    'description': _descriptionController.text,
+                    'nama': _namaController.text,
+                    'instansi': _asalController.text,
+                    'keperluan': _keperluanController.text,
+                    'nomor': _nomorController.text,
+                    'ditemui': _ditemuiController.text,
+                    'jumlahtamu': _jumTamuController.text,
+                    'keterangan': _ketController.text,
                     'imageUrl': imageUrl,
                     'timestamp': DateTime.now(),
                   };
@@ -87,8 +132,13 @@ class _GuestBookState extends State<GuestBook> {
                   final collectionRef =
                       FirebaseFirestore.instance.collection('my_guest');
                   await collectionRef.add(formData);
-                  _titleController.clear();
-                  _descriptionController.clear();
+                  _namaController.clear();
+                  _asalController.clear();
+                  _keperluanController.clear();
+                  _nomorController.clear();
+                  _ditemuiController.clear();
+                  _jumTamuController.clear();
+                  _ketController.clear();
                   setState(() {
                     file = null;
                   });
