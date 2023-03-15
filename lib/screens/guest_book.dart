@@ -22,69 +22,81 @@ class _GuestBookState extends State<GuestBook> {
         title: const Text('Buku Tamu'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () async {
-                html.FileUploadInputElement uploadInput =
-                    html.FileUploadInputElement();
-                uploadInput.click();
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 20.0,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  html.FileUploadInputElement uploadInput =
+                      html.FileUploadInputElement();
+                  uploadInput.click();
 
-                uploadInput.onChange.listen((event) {
-                  final file = uploadInput.files!.first;
-                  setState(() {
-                    this.file = file;
+                  uploadInput.onChange.listen((event) {
+                    final file = uploadInput.files!.first;
+                    setState(() {
+                      this.file = file;
+                    });
                   });
-                });
-              },
-              child: const Text('Upload Image'),
-            ),
-            const SizedBox(height: 20),
-            if (file != null)
-              Image.network(html.Url.createObjectUrlFromBlob(file!),
-                  height: 150),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
-            ),
-            TextFormField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                if (file == null) return;
-                final storageRef =
-                    firebase_storage.FirebaseStorage.instance.ref();
-                final imageRef = storageRef
-                    .child('images/${DateTime.now().millisecondsSinceEpoch}');
-                final uploadTask = imageRef.putBlob(file!);
+                },
+                child: const Text('Upload Image'),
+              ),
+              const SizedBox(height: 20),
+              if (file != null)
+                Image.network(html.Url.createObjectUrlFromBlob(file!),
+                    height: 150),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextFormField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(labelText: 'Title'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: TextFormField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(labelText: 'Description'),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  if (file == null) return;
+                  final storageRef =
+                      firebase_storage.FirebaseStorage.instance.ref();
+                  final imageRef = storageRef
+                      .child('images/${DateTime.now().millisecondsSinceEpoch}');
+                  final uploadTask = imageRef.putBlob(file!);
 
-                final snapshot = await uploadTask.whenComplete(() {});
-                final imageUrl = await snapshot.ref.getDownloadURL();
+                  final snapshot = await uploadTask.whenComplete(() {});
+                  final imageUrl = await snapshot.ref.getDownloadURL();
 
-                final formData = {
-                  'title': _titleController.text,
-                  'description': _descriptionController.text,
-                  'imageUrl': imageUrl,
-                  'timestamp': DateTime.now(),
-                };
+                  final formData = {
+                    'title': _titleController.text,
+                    'description': _descriptionController.text,
+                    'imageUrl': imageUrl,
+                    'timestamp': DateTime.now(),
+                  };
 
-                final collectionRef =
-                    FirebaseFirestore.instance.collection('my_guest');
-                await collectionRef.add(formData);
-                _titleController.clear();
-                _descriptionController.clear();
-                setState(() {
-                  file = null;
-                });
-              },
-              child: const Text('Submit'),
-            ),
-          ],
+                  final collectionRef =
+                      FirebaseFirestore.instance.collection('my_guest');
+                  await collectionRef.add(formData);
+                  _titleController.clear();
+                  _descriptionController.clear();
+                  setState(() {
+                    file = null;
+                  });
+                },
+                child: const Text('Submit'),
+              ),
+            ],
+          ),
         ),
       ),
     );
